@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Premium Experience</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --gold: linear-gradient(135deg, #d4af37 0%, #f9f295 45%, #b8860b 70%, #f9f295 100%);
+            --dark: #020205;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            width: 100vw; height: 100vh; overflow: hidden;
+            background: var(--dark); font-family: 'Poppins', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            perspective: 2500px;
+        }
+
+        /* --- ATTRACTIVE NEBULA BACKGROUND --- */
+        #bg-canvas {
+            position: fixed; inset: 0; z-index: 1;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #020205 100%);
+        }
+
+        /* --- ENTRANCE OVERLAY --- */
+        #overlay {
+            position: fixed; inset: 0; background: #000; z-index: 3000;
+            display: flex; justify-content: center; align-items: center;
+            transition: 1s ease;
+        }
+        .overlay-content { text-align: center; color: white; }
+        #userName {
+            background: transparent; border: 2px solid #d4af37; padding: 12px;
+            color: white; border-radius: 30px; width: 250px; margin: 20px 0;
+            text-align: center; outline: none; font-size: 1rem;
+        }
+        .start-btn {
+            background: var(--gold); border: none; padding: 12px 35px;
+            font-weight: bold; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* --- THE BOOK --- */
+        .card-container {
+            width: 380px; height: 520px;
+            position: relative; z-index: 10;
+            transition: transform 1s ease;
+            transform: translateX(0);
+        }
+        .card-container.shifted { transform: translateX(190px); }
+
+        .book {
+            width: 100%; height: 100%;
+            position: relative; transform-style: preserve-3d;
+        }
+
+        .page {
+            position: absolute; inset: 0;
+            background: #fff;
+            padding: 40px;
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
+            backface-visibility: hidden;
+            border-radius: 0 15px 15px 0;
+            transform-origin: left;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        /* Specific Page Layering */
+        .p1 { z-index: 5; background: #111; color: white; border: 1px solid #222; }
+        .p2 { z-index: 4; }
+        .p3 { z-index: 3; }
+        .p4 { z-index: 2; background: #fafafa; }
+
+        /* Flipped State */
+        .flipped { transform: rotateY(-180deg); }
+
+        /* --- DECORATIONS --- */
+        .wax-seal {
+            position: absolute; bottom: 40px; right: 40px;
+            width: 60px; height: 60px;
+            background: #8b0000; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #d4af37; font-weight: bold; font-family: 'Playfair Display';
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            border: 2px solid #a30000;
+        }
+
+        .year-text {
+            font-size: 5rem; font-family: 'Playfair Display';
+            background: var(--gold); -webkit-background-clip: text;
+            background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        #countdown { color: #d4af37; letter-spacing: 5px; font-size: 1.2rem; }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .btn { padding: 10px 15px; border-radius: 5px; cursor: pointer; border: 1px solid #333; font-weight: 600; }
+        .magic-btn { background: #111; color: gold; border-color: gold; }
+
+        #particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <div class="overlay-content">
+            <h1 style="color:#d4af37; font-family:'Playfair Display'; font-size: 3rem;">2026 INVITATION</h1>
+            <input type="text" id="userName" placeholder="Your Name">
+            <br>
+            <button class="start-btn" onclick="startExperience()">ENTER THE YEAR</button>
+        </div>
+    </div>
+
+    <canvas id="bg-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="card-container" id="container">
+        <div class="book">
+            
+            <div class="page p1" id="page1" onclick="flip(1)">
+                <h1 class="year-text">2026</h1>
+                <div id="countdown">00:00:00</div>
+                <div style="width:50px; height:2px; background:#d4af37; margin:20px 0;"></div>
+                <p style="letter-spacing:3px; font-size:12px; color:#777;">CLICK TO UNVEIL</p>
+                <div class="wax-seal">26</div>
+            </div>
+
+            <div class="page p2" id="page2" onclick="flip(2)">
+                <h2 style="font-family: 'Playfair Display'; color: #b8860b;">The Reflection</h2>
+                <p style="margin-top:20px; text-align:center; color:#555; line-height:1.6;">
+                    Every end is a new beginning. As the clock strikes twelve, 
+                    remember that 2026 is your blank canvas.
+                </p>
+                <span style="font-size:3rem; margin-top:20px;">🌠</span>
+                <p style="margin-top:40px; font-size:10px; color:#aaa;">(Click to turn page)</p>
+            </div>
+
+            <div class="page p3" id="page3" onclick="flip(3)">
+                <h2 style="font-family: 'Playfair Display'; color: #b8860b;">The Vision</h2>
+                <p style="margin-top:20px; text-align:center; color:#555; line-height:1.6;">
+                    May your bugs be few, your logic be sound, and your 
+                    creativity know no bounds this year.
+                </p>
+                <span style="font-size:3rem; margin-top:20px;">🚀</span>
+            </div>
+
+            <div class="page p4" id="capture-area">
+                <h2 style="font-family: 'Playfair Display';">Happy New Year,</h2>
+                <h1 id="displayName" style="color:#b8860b; font-size: 2.2rem;">Friend</h1>
+                <p style="color: #666; margin-top: 10px;">Cheers to a spectacular 2026!</p>
+                
+                <div class="btn-group">
+                    <button class="btn magic-btn" onclick="celebrate(event)">Magic ✨</button>
+                    <button class="btn" onclick="downloadCard(event)">Save 📥</button>
+                </div>
+                <p style="margin-top:30px; font-size:10px; color:#ccc; cursor:pointer;" onclick="resetBook()">RESTART</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const particleCanvas = document.getElementById('particle-canvas');
+        const pCtx = particleCanvas.getContext('2d');
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+
+        particleCanvas.width = bgCanvas.width = window.innerWidth;
+        particleCanvas.height = bgCanvas.height = window.innerHeight;
+
+        function startExperience() {
+            const name = document.getElementById('userName').value;
+            if(name) document.getElementById('displayName').innerText = name;
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => document.getElementById('overlay').style.display = 'none', 800);
+        }
+
+        // --- PAGE FLIP SYSTEM ---
+        function flip(pageNumber) {
+            document.getElementById('page' + pageNumber).classList.add('flipped');
+            if(pageNumber === 1) container.classList.add('shifted');
+        }
+
+        function resetBook() {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('flipped'));
+            container.classList.remove('shifted');
+        }
+
+        // --- NEBULA BACKGROUND ---
+        let stars = [];
+        for(let i=0; i<150; i++) {
+            stars.push({ x: Math.random()*bgCanvas.width, y: Math.random()*bgCanvas.height, size: Math.random()*2, speed: Math.random()*0.5 });
+        }
+
+        function drawBg() {
+            bgCtx.clearRect(0,0,bgCanvas.width, bgCanvas.height);
+            bgCtx.fillStyle = "white";
+            stars.forEach(s => {
+                bgCtx.beginPath();
+                bgCtx.arc(s.x, s.y, s.size, 0, Math.PI*2);
+                bgCtx.fill();
+                s.y += s.speed;
+                if(s.y > bgCanvas.height) s.y = 0;
+            });
+            requestAnimationFrame(drawBg);
+        }
+        drawBg();
+
+        // --- MAGIC PARTICLES ---
+        let particles = [];
+        function celebrate(e) {
+            e.stopPropagation();
+            for(let i=0; i<80; i++) {
+                particles.push({
+                    x: e.clientX, y: e.clientY,
+                    sx: (Math.random()-0.5)*15, sy: (Math.random()-0.5)*15,
+                    alpha: 1, color: `hsl(${Math.random()*40+35}, 100%, 50%)`
+                });
+            }
+        }
+
+        function animateParticles() {
+            pCtx.clearRect(0,0,particleCanvas.width, particleCanvas.height);
+            particles.forEach((p, i) => {
+                p.x += p.sx; p.y += p.sy; p.sy += 0.2; p.alpha -= 0.02;
+                pCtx.globalAlpha = p.alpha;
+                pCtx.fillStyle = p.color;
+                pCtx.beginPath(); pCtx.arc(p.x, p.y, 4, 0, Math.PI*2); pCtx.fill();
+                if(p.alpha <= 0) particles.splice(i, 1);
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // --- TIMER & DOWNLOAD ---
+        function updateTimer() {
+            const now = new Date().getTime();
+            const target = new Date("Jan 1, 2026 00:00:00").getTime();
+            const gap = target - now;
+            const h = Math.floor((gap % 86400000) / 3600000);
+            const m = Math.floor((gap % 3600000) / 60000);
+            const s = Math.floor((gap % 60000) / 1000);
+            document.getElementById("countdown").innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+        setInterval(updateTimer, 1000);
+
+        function downloadCard(e) {
+            e.stopPropagation();
+            html2canvas(document.getElementById('capture-area')).then(c => {
+                const a = document.createElement('a');
+                a.download = 'NewYear_2026.png';
+                a.href = c.toDataURL();
+                a.click();
+            });
+        }
+    </script>
+</body>
+</html>
